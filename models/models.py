@@ -13,7 +13,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = "Users"
+    __tablename__ = "users"
 
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     name = Column("name", String)
@@ -31,7 +31,7 @@ class User(Base):
 
 
 class Order(Base):
-    __tablename__ = "Orders"
+    __tablename__ = "orders"
 
     ORDER_STATUS = (
         ("PENDING", "PENDING"),
@@ -50,5 +50,23 @@ class Order(Base):
         self.user = user
         self.status = status
         self.total_price = total_price
+
+
+class OrderItems(Base):
+    __tablename__ = "orders_items"
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    order = Column("order", ForeignKey("orders.id"))
+    quantity = Column("quantity", Integer)
+    flavor = Column("flavor", String)
+    size = Column("size", String)
+    unit_price = Column("unit_price", Float)
+
+    def __init__(self, order, quantity, flavor, size, unit_price):
+        self.order = order
+        self.quantity = quantity
+        self.flavor = flavor
+        self.size = size
+        self.unit_price = unit_price
 
     # executar a criação dos metadados do seu banco (criar efetivamente)
