@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, Column, Float, String, Integer, Boolean, ForeignKey
+from sqlalchemy_utils.types import ChoiceType
 from sqlalchemy import declarative_base
 
 # passar o link do db aqui no create_engine
@@ -9,9 +10,6 @@ db = create_engine("sqlite:///database/database.db")
 Base = declarative_base()
 
 # criar as classes/tabelas do banco
-# Usuario
-# Pedidos
-# ItensPedidos
 
 
 class User(Base):
@@ -32,4 +30,25 @@ class User(Base):
         self.admin = admin
 
 
-# executar a criação dos metadados do seu banco (criar efetivamente)
+class Order(Base):
+    __tablename__ = "Orders"
+
+    ORDER_STATUS = (
+        ("PENDING", "PENDING"),
+        ("CANCELED", "CANCELED"),
+        ("FINALIZED", "FINALIZED")
+    )
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    user = Column("user", ForeignKey("Users.id"))
+    status = Column("status", ChoiceType(
+        choices=ORDER_STATUS))
+    total_price = Column("total_price", Float)
+    # items = Column()
+
+    def __init__(self, user, status="PENDING", total_price=0):
+        self.user = user
+        self.status = status
+        self.total_price = total_price
+
+    # executar a criação dos metadados do seu banco (criar efetivamente)
