@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Column, Float, String, Integer, Boolean, ForeignKey
-from sqlalchemy_utils.types import ChoiceType
-from sqlalchemy import declarative_base
+# from sqlalchemy_utils.types import ChoiceType
+from sqlalchemy.ext.declarative import declarative_base
 
 # passar o link do db aqui no create_engine
 # criar a conexão com o banco de dados
@@ -19,8 +19,8 @@ class User(Base):
     name = Column("name", String)
     email = Column("email", String, nullable=False)
     password = Column("password", String)
-    active = Column("active", Bolean)
-    admin = Column("admin", Bolean, default=False)
+    active = Column("active", Boolean)
+    admin = Column("admin", Boolean, default=False)
 
     def __init__(self, name, email, password, active=True, admin=False):
         self.name = name
@@ -33,16 +33,15 @@ class User(Base):
 class Order(Base):
     __tablename__ = "orders"
 
-    ORDER_STATUS = (
-        ("PENDING", "PENDING"),
-        ("CANCELED", "CANCELED"),
-        ("FINALIZED", "FINALIZED")
-    )
+    # ORDER_STATUS = (
+    #     ("PENDING", "PENDING"),
+    #     ("CANCELED", "CANCELED"),
+    #     ("FINALIZED", "FINALIZED")
+    # )
 
     id = Column("id", Integer, primary_key=True, autoincrement=True)
-    user = Column("user", ForeignKey("Users.id"))
-    status = Column("status", ChoiceType(
-        choices=ORDER_STATUS))
+    user = Column("user", ForeignKey("users.id"))
+    status = Column("status", String)
     total_price = Column("total_price", Float)
     # items = Column()
 
